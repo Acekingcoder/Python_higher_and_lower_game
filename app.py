@@ -1,10 +1,11 @@
+import os
 import random
 from flask import Flask, render_template, request, session, redirect, url_for
 
 from data import topics, get_pageviews
 
 app = Flask(__name__)
-app.secret_key = "replace-this-with-a-real-secret-key-before-deploying"
+app.secret_key = os.environ.get("SECRET_KEY", "dev-only-fallback-do-not-use-in-production")
 
 
 def find_valid_topic(exclude_slugs):
