@@ -1,12 +1,19 @@
 import requests
 
 def get_pageviews(topic):
+    """Return total 2025 pageviews for a Wikipedia article slug, or None if
+    the request fails or the API doesn't return usable data (bad slug,
+    rate limit, network hiccup, etc.) — never raises."""
     url = f"https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia/all-access/all-agents/{topic}/monthly/2025010100/2025123100"
     headers = {"User-Agent": "HigherLowerGame/1.0 (your-email@example.com)"}
-    response = requests.get(url, headers=headers)
-    data = response.json()
-    total_views = sum(item['views'] for item in data['items'])
-    return total_views
+    try:
+        response = requests.get(url, headers=headers, timeout=10)
+        response.raise_for_status()
+        data = response.json()
+        total_views = sum(item["views"] for item in data["items"])
+        return total_views
+    except (requests.exceptions.RequestException, ValueError, KeyError):
+        return None
 
 if __name__ == "__main__":
     print(get_pageviews("Cristiano_Ronaldo"))

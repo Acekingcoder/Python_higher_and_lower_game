@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CLOUTLINE — Higher or Lower</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+  <body>
+    <div class="ticker-bar">
+      <div class="ticker-track">
+        <span>SOCIAL EXCHANGE</span><span>LIVE PAGEVIEW FEED</span
+        ><span>ROUND {{ score + 1 }}</span><span>SOCIAL EXCHANGE</span
+        ><span>LIVE PAGEVIEW FEED</span><span>ROUND {{ score + 1 }}</span>
+      </div>
+    </div>
+
+    <main>
+      <header class="masthead">
+        <h1 class="wordmark">CLOUTLINE<span class="dot">.</span></h1>
+        <p class="tagline">
+          Two Wikipedia topics. One has more monthly pageviews. Pick it.
+        </p>
+      </header>
+
+      <div class="scoreboard" aria-live="polite">
+        <span class="scoreboard-label">Streak</span>
+        <span class="scoreboard-value">{{ "%02d"|format(score) }}</span>
+      </div>
+
+      {% if state == "guessing" %}
+      <p class="instruction">
+        Which one gets more traffic? Click a card to lock in your guess.
+      </p>
+      {% elif state == "reveal" %}
+      <p class="instruction result-correct">
+        ✓ Correct — here's how it broke down.
+      </p>
+      {% elif state == "game_over" %}
+      <p class="instruction result-wrong">
+        ✗ Wrong guess — here's the real gap.
+      </p>
+      {% endif %} {% if state == "error" %}
+      <div class="result-panel">
+        <p class="result-headline">
+          Couldn't reach Wikipedia's pageviews API right now. Check your
+          connection and try again.
+        </p>
+        <form method="POST" action="{{ url_for('restart') }}">
+          <button type="submit" class="restart-btn">Try again</button>
+        </form>
+      </div>
+      {% else %}
+      <div class="arena">
+        {% if state == "guessing" %}
+        <form
+          method="POST"
+          action="{{ url_for('guess') }}"
+          class="account-card clickable-card"
+          data-side="a"
+        >
+          <input type="hidden" name="guess" value="a" />
+          <div class="card-eyebrow">Topic A</div>
+          <h2 class="account-name">{{ topic_a.name }}</h2>
+          <p class="account-meta">{{ topic_a.description }}</p>
+          <p class="stat-label">Monthly Wikipedia pageviews</p>
+          <span class="follower-count hidden">? ? ?</span>
+          <button type="submit" class="pick-btn">This one has more →</button>
+        </form>
+        {% else %}
+        <div
+          class="account-card {% if views_a >= views_b %}winner-card{% endif %}"
+          data-side="a"
+        >
+          <div class="card-eyebrow">Topic A</div>
+          <h2 class="account-name">{{ topic_a.name }}</h2>
+          <p class="account-meta">{{ topic_a.description }}</p>
+          <p class="stat-label">Monthly Wikipedia pageviews</p>
+          <span
+            class="follower-count reveal {% if views_a >= views_b %}winner{% endif %}"
+          >
+            {{ "{:,}".format(views_a) }}
+          </span>
+        </div>
+        {% endif %}
+
+        <div class="vs-divider">
+          <span class="vs-badge">VS</span>
+        </div>
+
+        {% if state == "guessing" %}
+        <form
+          method="POST"
+          action="{{ url_for('guess') }}"
+          class="account-card clickable-card"
+          data-side="b"
+        >
+          <input type="hidden" name="guess" value="b" />
+          <div class="card-eyebrow">Topic B</div>
+          <h2 class="account-name">{{ topic_b.name }}</h2>
+          <p class="account-meta">{{ topic_b.description }}</p>
+          <p class="stat-label">Monthly Wikipedia pageviews</p>
+          <span class="follower-count hidden">? ? ?</span>
+          <button type="submit" class="pick-btn">This one has more →</button>
+        </form>
+        {% else %}
+        <div
+          class="account-card {% if views_b >= views_a %}winner-card{% endif %}"
+          data-side="b"
+        >
+          <div class="card-eyebrow">Topic B</div>
+          <h2 class="account-name">{{ topic_b.name }}</h2>
+          <p class="account-meta">{{ topic_b.description }}</p>
+          <p class="stat-label">Monthly Wikipedia pageviews</p>
+          <span
+            class="follower-count reveal {% if views_b >= views_a %}winner{% endif %}"
+          >
+            {{ "{:,}".format(views_b) }}
+          </span>
+        </div>
+        {% endif %}
+      </div>
+      {% endif %} {% if state == "reveal" %}
+      <div class="result-panel">
+        <p class="result-headline correct">
+          Streak now at {{ score }}. Next pair's ready.
+        </p>
+        <form method="POST" action="{{ url_for('next_round') }}">
+          <button type="submit" class="restart-btn">Next round →</button>
+        </form>
+      </div>
+      {% elif state == "game_over" %}
+      <div class="result-panel">
+        <p class="result-headline">Board flipped. Final streak: {{ score }}.</p>
+        <form method="POST" action="{{ url_for('restart') }}">
+          <button type="submit" class="restart-btn">Run it back</button>
+        </form>
+      </div>
+      {% endif %}
+    </main>
+
+    <footer class="footer">
+      Built solo in Python + Flask — one of many small exercises, view the rest
+      on
+      <a href="https://github.com/Acekingcoder" target="_blank" rel="noopener"
+        >GitHub</a
+      >.
+    </footer>
+  </body>
+</html>

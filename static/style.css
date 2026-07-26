@@ -1,0 +1,328 @@
+:root {
+  --bg: #12141c;
+  --surface: #1b1e29;
+  --surface-hover: #232734;
+  --border: #2c3040;
+  --text-primary: #f1f2f6;
+  --text-secondary: #8b8fa3;
+  --up: #00d9a3;
+  --down: #ff4b6e;
+  --gold: #ffc857;
+  --focus: #6ea8fe;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text-primary);
+  font-family:
+    "Inter",
+    -apple-system,
+    sans-serif;
+  min-height: 100vh;
+}
+
+/* Ticker bar — signature element */
+.ticker-bar {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  overflow: hidden;
+  white-space: nowrap;
+  padding: 8px 0;
+}
+.ticker-track {
+  display: inline-flex;
+  gap: 48px;
+  animation: scroll-ticker 18s linear infinite;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  color: var(--gold);
+}
+.ticker-track span::after {
+  content: "◆";
+  margin-left: 48px;
+  color: var(--border);
+}
+@keyframes scroll-ticker {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ticker-track {
+    animation: none;
+  }
+}
+
+main {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 40px 24px 24px;
+}
+
+.masthead {
+  text-align: center;
+  margin-bottom: 24px;
+}
+.wordmark {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: clamp(40px, 8vw, 64px);
+  letter-spacing: 0.06em;
+  margin: 0;
+  line-height: 1;
+}
+.wordmark .dot {
+  color: var(--up);
+}
+.tagline {
+  color: var(--text-secondary);
+  font-size: 15px;
+  margin: 8px 0 0;
+}
+
+.scoreboard {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+.scoreboard-label {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+.scoreboard-value {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--gold);
+}
+
+.instruction {
+  text-align: center;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  color: var(--text-secondary);
+  margin: 0 0 24px;
+}
+.instruction.result-correct {
+  color: var(--up);
+}
+.instruction.result-wrong {
+  color: var(--down);
+}
+
+.arena {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: stretch;
+  gap: 20px;
+}
+
+.account-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 28px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+  transition:
+    border-color 0.2s ease,
+    transform 0.2s ease;
+  margin: 0;
+}
+
+.account-card.winner-card {
+  border-color: var(--up);
+  box-shadow: 0 0 0 1px var(--up);
+}
+
+.clickable-card {
+  cursor: pointer;
+}
+.clickable-card:hover {
+  border-color: var(--up);
+  transform: translateY(-2px);
+  background: var(--surface-hover);
+}
+
+.card-eyebrow {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.account-name {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 30px;
+  letter-spacing: 0.02em;
+  margin: 0;
+  line-height: 1.05;
+}
+
+.account-meta {
+  color: var(--text-secondary);
+  font-size: 14px;
+  margin: 0;
+  min-height: 40px;
+}
+
+.stat-label {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin: 6px 0 0;
+}
+
+.follower-slot {
+  margin: 8px 0 4px;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+}
+
+.follower-count {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 26px;
+  font-weight: 700;
+}
+.follower-count.hidden {
+  color: var(--text-secondary);
+  letter-spacing: 0.1em;
+}
+.follower-count.reveal {
+  color: var(--down);
+}
+.follower-count.reveal.winner {
+  color: var(--up);
+}
+
+.pick-btn {
+  margin-top: auto;
+  width: 100%;
+  padding: 12px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.pick-btn:hover {
+  background: var(--up);
+  border-color: var(--up);
+  color: #08110d;
+}
+.pick-btn:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.vs-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.vs-badge {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 20px;
+  letter-spacing: 0.05em;
+  background: var(--gold);
+  color: #1a1200;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    0 0 0 6px var(--bg),
+    0 0 0 7px var(--border);
+}
+
+.result-panel {
+  text-align: center;
+  margin-top: 28px;
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+}
+.result-headline {
+  font-family: "JetBrains Mono", monospace;
+  color: var(--down);
+  margin: 0 0 14px;
+  font-size: 14px;
+}
+.result-headline.correct {
+  color: var(--up);
+}
+.restart-btn {
+  padding: 12px 28px;
+  background: var(--gold);
+  border: none;
+  border-radius: 8px;
+  color: #1a1200;
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 13px;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+.restart-btn:hover {
+  transform: translateY(-1px);
+}
+.restart-btn:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.footer {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 12px;
+  padding: 32px 24px 40px;
+}
+.footer a {
+  color: var(--gold);
+  text-decoration: none;
+}
+.footer a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 620px) {
+  .arena {
+    grid-template-columns: 1fr;
+  }
+  .vs-divider {
+    margin: -6px 0;
+  }
+}
